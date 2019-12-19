@@ -8,6 +8,8 @@ from simple_history.models import HistoricalRecords
 from django.db import models
 from django.utils.translation import gettext as _
 
+from enterprise_catalog.apps.catalog.constants import json_serialized_course_modes
+
 
 class CatalogQuery(models.Model):
     """
@@ -65,6 +67,17 @@ class EnterpriseCatalog(TimeStampedModel):
         null=False,
         related_name='enterprise_catalogs',
         on_delete=models.deletion.CASCADE
+    )
+    enabled_course_modes = JSONField(
+        default=json_serialized_course_modes,
+        help_text=_('Ordered list of enrollment modes which can be displayed to learners for course runs in'
+                    ' this catalog.'),
+    )
+    publish_audit_enrollment_urls = models.BooleanField(
+        default=False,
+        help_text=_(
+            "Specifies whether courses should be published with direct-to-audit enrollment URLs."
+        )
     )
 
     history = HistoricalRecords()
